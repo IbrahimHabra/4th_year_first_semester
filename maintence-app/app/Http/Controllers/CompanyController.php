@@ -23,6 +23,16 @@ class CompanyController extends Controller
     }
 
     /**
+     * @OA\Get(path="/api/companies/{id}", tags={"Companies"}, summary="Get Company Details", security={{"apiAuth":{}}},
+     * @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
+     * @OA\Response(response=200, description="Details", @OA\JsonContent(@OA\Property(property="data", ref="#/components/schemas/CompanyResource"))))
+     */
+    public function show(Company $company): JsonResponse
+    {
+        return response()->json(['data' => new CompanyResource($company)]);
+    }
+
+    /**
      * @OA\Post(path="/api/companies", tags={"Companies"}, summary="Create Company", security={{"apiAuth":{}}},
      * @OA\RequestBody(required=true, @OA\JsonContent(required={"name"}, @OA\Property(property="name", type="string"))),
      * @OA\Response(response=201, description="Created"))

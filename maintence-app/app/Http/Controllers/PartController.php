@@ -50,6 +50,16 @@ class PartController extends Controller
     }
 
     /**
+     * @OA\Get(path="/api/parts/{id}", tags={"Parts"}, summary="Get Part Details", security={{"apiAuth":{}}},
+     * @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
+     * @OA\Response(response=200, description="Details", @OA\JsonContent(@OA\Property(property="data", ref="#/components/schemas/PartResource"))))
+     */
+    public function show(Part $part): JsonResponse
+    {
+        return response()->json(['data' => new PartResource($part)]);
+    }
+
+    /**
      * @OA\Post(
      * path="/api/parts",
      * summary="Create New Part",

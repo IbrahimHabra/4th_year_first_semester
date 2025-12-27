@@ -25,6 +25,17 @@ class DeviceModelController extends Controller
     }
 
     /**
+     * @OA\Get(path="/api/models/{id}", tags={"Models"}, summary="Get Model Details", security={{"apiAuth":{}}},
+     * @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
+     * @OA\Response(response=200, description="Details", @OA\JsonContent(@OA\Property(property="data", ref="#/components/schemas/DeviceModelResource"))))
+     */
+    public function show(string $id): JsonResponse
+    {
+        $model = DeviceModel::with('company')->findOrFail($id);
+        return response()->json(['data' => new DeviceModelResource($model)]);
+    }
+
+    /**
      * @OA\Post(path="/api/models", tags={"Models"}, summary="Create Model", security={{"apiAuth":{}}},
      * @OA\RequestBody(required=true, @OA\JsonContent(required={"name", "company_id"}, @OA\Property(property="name", type="string"), @OA\Property(property="company_id", type="integer"))),
      * @OA\Response(response=201, description="Created"))

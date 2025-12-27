@@ -65,6 +65,181 @@
                 }
             }
         },
+        "/api/orders/{order_id}/bills": {
+            "get": {
+                "tags": [
+                    "Bills"
+                ],
+                "summary": "Get All Bills for an Order",
+                "description": "Retrieve the list of parts/bills associated with a specific order.",
+                "operationId": "240261639e1fc096e05f3204b9a3199c",
+                "parameters": [
+                    {
+                        "name": "order_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of bills",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/BillResource"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "apiAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Bills"
+                ],
+                "summary": "Add Part to Order",
+                "description": "Creates a Bill and a 'Consumed' RecordPart (Type 2). Deducts stock.",
+                "operationId": "d8058a6522edcb561b6af4833be97bef",
+                "parameters": [
+                    {
+                        "name": "order_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "part_id",
+                                    "part_amount"
+                                ],
+                                "properties": {
+                                    "part_id": {
+                                        "type": "integer"
+                                    },
+                                    "part_amount": {
+                                        "type": "integer"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Part Added"
+                    }
+                },
+                "security": [
+                    {
+                        "apiAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/bills/{id}": {
+            "put": {
+                "tags": [
+                    "Bills"
+                ],
+                "summary": "Edit Bill Item",
+                "description": "Updates price/amount. Automatically creates RecordPart to adjust stock difference.",
+                "operationId": "865d163852592df74d6042eb18f74e61",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "part_price",
+                                    "part_amount"
+                                ],
+                                "properties": {
+                                    "part_price": {
+                                        "type": "number"
+                                    },
+                                    "part_amount": {
+                                        "type": "integer"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Bill updated"
+                    }
+                },
+                "security": [
+                    {
+                        "apiAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Bills"
+                ],
+                "summary": "Remove Part from Order",
+                "description": "Deletes Bill and creates 'Restock' RecordPart (Type 1). Returns items to inventory.",
+                "operationId": "7981918d72eb9d73d5ba2fe38a586058",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Bill deleted and stock returned"
+                    }
+                },
+                "security": [
+                    {
+                        "apiAuth": []
+                    }
+                ]
+            }
+        },
         "/api/companies": {
             "get": {
                 "tags": [
@@ -135,6 +310,45 @@
             }
         },
         "/api/companies/{id}": {
+            "get": {
+                "tags": [
+                    "Companies"
+                ],
+                "summary": "Get Company Details",
+                "operationId": "01c261c039e4b27beeb888ef46bd86db",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Details",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/CompanyResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "apiAuth": []
+                    }
+                ]
+            },
             "put": {
                 "tags": [
                     "Companies"
@@ -397,6 +611,45 @@
             }
         },
         "/api/models/{id}": {
+            "get": {
+                "tags": [
+                    "Models"
+                ],
+                "summary": "Get Model Details",
+                "operationId": "d266d09e4cfa7332c80e1c71abc055af",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Details",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/DeviceModelResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "apiAuth": []
+                    }
+                ]
+            },
             "put": {
                 "tags": [
                     "Models"
@@ -527,6 +780,45 @@
             }
         },
         "/api/members/{id}": {
+            "get": {
+                "tags": [
+                    "Members"
+                ],
+                "summary": "Get Member Details",
+                "operationId": "80f0d8d79a63de8091cbd614c69bb185",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Details",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/MemberResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "apiAuth": []
+                    }
+                ]
+            },
             "put": {
                 "tags": [
                     "Members"
@@ -578,6 +870,252 @@
                 "responses": {
                     "200": {
                         "description": "Member updated successfully"
+                    }
+                },
+                "security": [
+                    {
+                        "apiAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/orders": {
+            "get": {
+                "tags": [
+                    "Orders"
+                ],
+                "summary": "Get All Orders (Chunked)",
+                "description": "Retrieve orders in chunks of 10. Use 'page' parameter to navigate.",
+                "operationId": "2cd7e03021e72d9d799c12dfe179c865",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Chunk number (default 1)",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of orders",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/OrderResource"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "apiAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Orders"
+                ],
+                "summary": "Create New Order",
+                "description": "Creates a new maintenance order for a customer.",
+                "operationId": "11147bac13e660416c0add2aaa304309",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "model_id",
+                                    "member_id",
+                                    "customer_name"
+                                ],
+                                "properties": {
+                                    "model_id": {
+                                        "description": "ID of the device model",
+                                        "type": "integer",
+                                        "example": 10
+                                    },
+                                    "member_id": {
+                                        "description": "ID of the technician assigned",
+                                        "type": "integer",
+                                        "example": 2
+                                    },
+                                    "customer_name": {
+                                        "type": "string",
+                                        "example": "Adel Kharma"
+                                    },
+                                    "notes": {
+                                        "type": "string",
+                                        "example": "Screen is cracked, touch not working",
+                                        "nullable": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Order created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Order created successfully"
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/OrderResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error"
+                    }
+                },
+                "security": [
+                    {
+                        "apiAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/orders/{id}": {
+            "get": {
+                "tags": [
+                    "Orders"
+                ],
+                "summary": "Get Order Details",
+                "description": "Retrieve full details of a specific order, including its current status and bills.",
+                "operationId": "c29621029e70f65247909d3e09031118",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Order details",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/OrderResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Order not found"
+                    }
+                },
+                "security": [
+                    {
+                        "apiAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Orders"
+                ],
+                "summary": "Edit Order Details",
+                "description": "Updates manual fields like notes and on_hand_price. Does NOT affect bills/parts.",
+                "operationId": "6a7029f5510ca08e28a2d58a5fe19439",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "customer_name": {
+                                        "type": "string"
+                                    },
+                                    "notes": {
+                                        "type": "string"
+                                    },
+                                    "on_hand_price": {
+                                        "description": "Manual Price Override",
+                                        "type": "number"
+                                    },
+                                    "member_id": {
+                                        "type": "integer"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Order updated"
+                    }
+                },
+                "security": [
+                    {
+                        "apiAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Orders"
+                ],
+                "summary": "Delete Order",
+                "description": "Deletes an order. WARNING: This will automatically delete all associated bills due to cascade constraints.",
+                "operationId": "303a7b797887b66c7790c4c187b54790",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Order deleted successfully"
                     }
                 },
                 "security": [
@@ -703,6 +1241,45 @@
             }
         },
         "/api/parts/{id}": {
+            "get": {
+                "tags": [
+                    "Parts"
+                ],
+                "summary": "Get Part Details",
+                "operationId": "46b9b619ef69fbfb66ca0c503b5af5d4",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Details",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/PartResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "apiAuth": []
+                    }
+                ]
+            },
             "put": {
                 "tags": [
                     "Parts"
@@ -815,10 +1392,345 @@
                     }
                 ]
             }
+        },
+        "/api/forgot-password": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Send Reset Link",
+                "description": "Generates a reset token and logs it (or sends email). Check storage/logs/laravel.log for the link.",
+                "operationId": "3b968e5662bb656a437a1b0b32e13f02",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "admin@kawarem.com"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Reset link sent"
+                    }
+                }
+            }
+        },
+        "/api/reset-password": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Reset Password",
+                "description": "Resets the user password using the token. NOTE: Stores password AS IS (Client-side hashing assumed).",
+                "operationId": "5a1e02ae971927f2615b5ff0e3f26f0c",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "token",
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "token": {
+                                        "type": "string",
+                                        "example": "69e2c6c7..."
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "admin@kawarem.com"
+                                    },
+                                    "password": {
+                                        "description": "The ALREADY HASHED password from client",
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Password has been reset"
+                    },
+                    "400": {
+                        "description": "Invalid token or email"
+                    }
+                }
+            }
+        },
+        "/api/change-password": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Change Password (Logged In)",
+                "description": "Updates the user password. Requires the current password for verification.",
+                "operationId": "426aa8e2e128ccd6a0e78584373681b8",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "current_password",
+                                    "new_password"
+                                ],
+                                "properties": {
+                                    "current_password": {
+                                        "type": "string",
+                                        "example": "old_hashed_password_from_client"
+                                    },
+                                    "new_password": {
+                                        "type": "string",
+                                        "example": "new_hashed_password_from_client"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Password updated successfully"
+                    },
+                    "401": {
+                        "description": "Incorrect current password"
+                    }
+                },
+                "security": [
+                    {
+                        "apiAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/record-parts": {
+            "get": {
+                "tags": [
+                    "Inventory Records"
+                ],
+                "summary": "Get Records (Chunked 10)",
+                "description": "Returns records in chunks of 10. Default is Page 1 (Records 1-10). Send ?page=2 for 11-20.",
+                "operationId": "284c8853d51408287adc77830b58f068",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Chunk number (Default: 1)",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of records",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/RecordPartResource"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "apiAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Inventory Records"
+                ],
+                "summary": "Add Stock Record",
+                "description": "Adds a record and updates Part stock. Type 1 increases stock; 2,3,4 decrease it.",
+                "operationId": "62ca1c16150b7dc6dc56968cec2862d6",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "part_id",
+                                    "modify_type_id",
+                                    "modified_amount",
+                                    "modification_date"
+                                ],
+                                "properties": {
+                                    "part_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "modify_type_id": {
+                                        "description": "1=Add, 2=Consumed, 3=Wasted, 4=Refunded",
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "modified_amount": {
+                                        "type": "integer",
+                                        "example": 10
+                                    },
+                                    "modification_date": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2025-12-06"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Created"
+                    }
+                },
+                "security": [
+                    {
+                        "apiAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/record-parts/{id}": {
+            "get": {
+                "tags": [
+                    "Inventory Records"
+                ],
+                "summary": "Get Record Details",
+                "operationId": "ed1bbe751da186616f6d97ff6f04680e",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Details",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/RecordPartResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "apiAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Inventory Records"
+                ],
+                "summary": "Update Record & Re-calculate Stock",
+                "description": "Updates the record and automatically adjusts the part stock based on the difference.",
+                "operationId": "b07221746516ff33f507f9e730ad295d",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "modified_amount": {
+                                        "type": "integer"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Updated"
+                    }
+                },
+                "security": [
+                    {
+                        "apiAuth": []
+                    }
+                ]
+            }
         }
     },
     "components": {
         "schemas": {
+            "BillResource": {
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "part_name": {
+                        "type": "string"
+                    },
+                    "part_price": {
+                        "type": "number"
+                    },
+                    "part_amount": {
+                        "type": "integer"
+                    },
+                    "total_price": {
+                        "type": "number"
+                    }
+                },
+                "type": "object"
+            },
             "CompanyResource": {
                 "properties": {
                     "id": {
@@ -887,6 +1799,42 @@
                 },
                 "type": "object"
             },
+            "OrderResource": {
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 15
+                    },
+                    "customer_name": {
+                        "type": "string",
+                        "example": "Adel Kharma"
+                    },
+                    "device_model": {
+                        "type": "string",
+                        "example": "Samsung S24"
+                    },
+                    "assigned_member": {
+                        "type": "string",
+                        "example": "Ibrahim"
+                    },
+                    "add_date": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2025-12-06T10:00:00Z"
+                    },
+                    "status": {
+                        "description": "pending, started, or finished",
+                        "type": "string",
+                        "example": "pending"
+                    },
+                    "notes": {
+                        "type": "string",
+                        "example": "Screen crack",
+                        "nullable": true
+                    }
+                },
+                "type": "object"
+            },
             "PartResource": {
                 "title": "Part Resource",
                 "properties": {
@@ -916,6 +1864,31 @@
                     }
                 },
                 "type": "object"
+            },
+            "RecordPartResource": {
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "part_name": {
+                        "type": "string",
+                        "example": "Compressor"
+                    },
+                    "modify_type": {
+                        "type": "string",
+                        "example": "Restock"
+                    },
+                    "amount": {
+                        "type": "integer",
+                        "example": 10
+                    },
+                    "date": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
             }
         },
         "securitySchemes": {
@@ -935,6 +1908,10 @@
             "description": "Auth"
         },
         {
+            "name": "Bills",
+            "description": "Bills"
+        },
+        {
             "name": "Companies",
             "description": "Companies"
         },
@@ -951,8 +1928,16 @@
             "description": "Members"
         },
         {
+            "name": "Orders",
+            "description": "Orders"
+        },
+        {
             "name": "Parts",
             "description": "Parts"
+        },
+        {
+            "name": "Inventory Records",
+            "description": "Inventory Records"
         }
     ]
 }

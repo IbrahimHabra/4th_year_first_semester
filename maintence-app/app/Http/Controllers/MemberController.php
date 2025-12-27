@@ -41,6 +41,16 @@ class MemberController extends Controller
     }
 
     /**
+     * @OA\Get(path="/api/members/{id}", tags={"Members"}, summary="Get Member Details", security={{"apiAuth":{}}},
+     * @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
+     * @OA\Response(response=200, description="Details", @OA\JsonContent(@OA\Property(property="data", ref="#/components/schemas/MemberResource"))))
+     */
+    public function show(Member $member): JsonResponse
+    {
+        return response()->json(['data' => new MemberResource($member)]);
+    }
+
+    /**
      * @OA\Post(
      * path="/api/members",
      * summary="Add New Member",
