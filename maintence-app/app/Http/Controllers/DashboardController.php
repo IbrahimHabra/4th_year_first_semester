@@ -8,6 +8,7 @@ use App\Http\Resources\OrderResource;
 use App\Http\Resources\PartResource;
 use App\Models\Order;
 use App\Models\Part;
+use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class DashboardController extends Controller
@@ -89,7 +90,7 @@ class DashboardController extends Controller
      * @OA\Response(response=401, description="Unauthenticated")
      * )
      */
-    public function pendingOrders(): AnonymousResourceCollection
+    public function pendingOrders(Request $request): AnonymousResourceCollection
     {
         $page = (int) $request->input('page', 1);
         $limit = 10;
@@ -105,6 +106,9 @@ class DashboardController extends Controller
             ->take($limit)
             ->get();
 
+
+
         return OrderResource::collection($orders);
     }
 }
+
