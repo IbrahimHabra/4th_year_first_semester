@@ -47,8 +47,6 @@ class OrderController extends Controller
             'member_id' => $request->member_id,
             'customer_name' => $request->customer_name,
             'notes' => $request->notes,
-            // 'add_date' is handled by database default (CURRENT_TIMESTAMP)
-            // 'on_hand_price' defaults to 0 via migration
         ]);
 
         return response()->json([
@@ -130,8 +128,6 @@ class OrderController extends Controller
     {
         $order = Order::findOrFail($id);
         
-        // Because of ->cascadeOnDelete() in your migration, 
-        // this will also delete the rows in the 'bills' table for this order.
         $order->delete();
 
         return response()->json(['message' => 'Order deleted successfully']);

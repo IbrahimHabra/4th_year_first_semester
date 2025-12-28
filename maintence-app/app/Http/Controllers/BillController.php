@@ -61,12 +61,10 @@ class BillController extends Controller
             $part = Part::findOrFail($request->part_id);
             $order = Order::findOrFail($orderId);
 
-            // 1. Check Stock
             if ($part->amount < $request->part_amount) {
                 throw ValidationException::withMessages(['part_amount' => "Insufficient stock. Only {$part->amount} available."]);
             }
 
-            // 2. Create Bill (The link between Order and Part)
             $bill = Bill::create([
                 'order_id' => $order->id,
                 'part_id' => $part->id,
